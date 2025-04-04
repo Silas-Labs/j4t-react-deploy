@@ -1,0 +1,27 @@
+name: Sync Repository
+
+on:
+  push:
+    branches:
+      - master
+    repository: Silas-Labs/j4t-react # Change to your source repo
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the destination repository
+        uses: actions/checkout@v2
+        with:
+          repository: Silas-Labs/j4t-react-deploy
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Pull changes from source repository
+        run: |
+          git remote add source https://github.com/Silas-Labs/j4t-react.git
+          git fetch source
+          git merge source/master
+          
+      - name: Push Changes
+        run: git push
